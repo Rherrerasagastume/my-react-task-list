@@ -1,10 +1,20 @@
 import { useState } from "react";
-import { FaTrash } from "react-icons/fa";
-import { FaEdit } from "react-icons/fa";
-import className from "classname";
+import { FaTrash, FaEdit } from "react-icons/fa";
+import classNames from "classnames";
 
 const Task = (props) => {
   const [checked, setChecked] = useState(false);
+  const [isEditing, setEditing] = useState(false);
+  const [editedName, setEditedName] = useState(props.name);
+
+  const handleEdit = () => {
+    setEditing(true);
+  };
+
+  const handleSave = () => {
+    setEditing(false);
+    props.isUpdated(editedName);
+  };
 
   return (
     <>
@@ -16,24 +26,34 @@ const Task = (props) => {
           <input
             type="radio"
             checked={checked}
-            name={props.name}
-            onClick={() => {
+            onChange={() => {
               setChecked(!checked);
               props.isChecked(!checked);
             }}
           />
-          <label
-            htmlFor={props.name}
-            className={className({ "text-decoration-line-through": checked })}
-          >
-            {props.name}
-          </label>
+          {isEditing ? (
+            <input
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+            />
+          ) : (
+            <label
+              htmlFor={props.name}
+              className={classNames({ "text-decoration-line-through": checked })}
+            >
+              {props.name}
+            </label>
+          )}
         </div>
         <div>
-          <button className="btn">
-            <FaEdit color="blue" />
+          <button className="btn" onClick={isEditing ? handleSave : handleEdit}>
+            {isEditing ? "Save" : <FaEdit color="blue" />}
           </button>
-          <button className="btn" onClick={() => props.isDeleted(props.id)}>
+          <button
+            className="btn"
+            onClick={() => props.isDeleted(props.id)}
+          >
             <FaTrash color="red" />
           </button>
         </div>

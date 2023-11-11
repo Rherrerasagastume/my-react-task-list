@@ -3,17 +3,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import TaskList from "./components/TaskList";
 import Header from "./components/header";
 import { useState } from "react";
+
 const staticList = [
-  {
-    name: "Buy a new gaming laptop",
-  },
-  {
-    name: "Complete a previus task",
-  },
-  {
-    name: "Create a video for youtube",
-  },
+  { name: "Buy a new gaming laptop", completed: false },
+  { name: "Complete a previous task", completed: false },
+  { name: "Create a video for YouTube", completed: false },
 ];
+
 const App = () => {
   if (!localStorage.getItem("list")) {
     localStorage.setItem("list", JSON.stringify(staticList));
@@ -21,6 +17,16 @@ const App = () => {
 
   const [list, setList] = useState(JSON.parse(localStorage.getItem("list")));
   const [name, setName] = useState("");
+
+  const addTask = () => {
+    if (name.trim() !== "") {
+      const newTask = { name, completed: false };
+      const newList = [...list, newTask];
+      setList(newList);
+      setName("");
+      localStorage.setItem("list", JSON.stringify(newList));
+    }
+  };
 
   return (
     <>
@@ -39,12 +45,7 @@ const App = () => {
         <div className="col-2">
           <button
             className="btn btn-primary"
-            onClick={() => {
-              const newList = [...list, { name }];
-              setList(newList);
-              setName("");
-              localStorage.setItem("list", JSON.stringify(newList));
-            }}
+            onClick={addTask}
           >
             +
           </button>
@@ -54,6 +55,13 @@ const App = () => {
         tasksList={list}
         deleteTask={(id) => {
           const newList = list.filter((el, i) => i !== id);
+          setList(newList);
+          localStorage.setItem("list", JSON.stringify(newList));
+        }}
+        editTask={(id, updatedTask) => {
+          const newList = list.map((el, i) =>
+            i === id ? { ...el, ...updatedTask } : el
+          );
           setList(newList);
           localStorage.setItem("list", JSON.stringify(newList));
         }}

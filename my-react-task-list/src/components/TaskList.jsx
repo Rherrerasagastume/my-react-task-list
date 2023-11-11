@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Task from "./Task";
+
 const TaskList = (props) => {
   const [completeTask, setCompleteTask] = useState(0);
+
   return (
     <>
       {props.tasksList.map((e, i) => (
@@ -15,8 +17,8 @@ const TaskList = (props) => {
           isDeleted={(id) => {
             props.deleteTask(id);
           }}
-          isUpdated={(data) => {
-            props.editTask(data);
+          isUpdated={(updatedName) => {
+            props.editTask(i, { name: updatedName });
           }}
         />
       ))}
