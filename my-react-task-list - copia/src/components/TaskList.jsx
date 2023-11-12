@@ -1,28 +1,26 @@
-import { useState } from "react";
+import React from "react";
 import Task from "./Task";
 
-const TaskList = (props) => {
-  const [completeTask, setCompleteTask] = useState(0);
-
+const TaskList = ({ tasksList, deleteTask, editTask }) => {
   return (
     <>
-      {props.tasksList.map((e, i) => (
+      {tasksList.map((task, index) => (
         <Task
-          key={i}
-          id={i}
-          name={e.name}
+          key={index}
+          id={index}
+          name={task.name}
           isChecked={(checked) => {
-            setCompleteTask(completeTask + (checked ? 1 : -1));
+            
           }}
           isDeleted={(id) => {
-            props.deleteTask(id);
+            deleteTask(id);
           }}
-          isUpdated={(updatedName) => {
-            props.editTask(i, { name: updatedName });
+          isUpdated={(id, updatedName) => {
+            editTask(id, { name: updatedName });
           }}
         />
       ))}
-      Tareas pendientes {props.tasksList.length - completeTask}
+      {}
     </>
   );
 };

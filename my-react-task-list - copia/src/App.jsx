@@ -1,8 +1,9 @@
+import React, { useState } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import TaskList from "./components/TaskList";
 import Header from "./components/header";
-import { useState } from "react";
+import useTaskManager from "./hooks/useTaskManager";
 
 const staticList = [
   { name: "Buy a new gaming laptop", completed: false },
@@ -11,21 +12,15 @@ const staticList = [
 ];
 
 const App = () => {
-  if (!localStorage.getItem("list")) {
-    localStorage.setItem("list", JSON.stringify(staticList));
-  }
-
-  const [list, setList] = useState(JSON.parse(localStorage.getItem("list")));
+  const { list, addTask, deleteTask, editTask } = useTaskManager(
+    JSON.parse(localStorage.getItem("list")) || staticList
+  );
   const [name, setName] = useState("");
 
-  const addTask = () => {
-    if (name.trim() !== "") {
-      const newTask = { name, completed: false };
-      const newList = [...list, newTask];
-      setList(newList);
-      setName("");
-      localStorage.setItem("list", JSON.stringify(newList));
-    }
+  const handleAddTask = () => {
+    console.log("Adding Task from App component:", name);
+    addTask(name);
+    setName("");
   };
 
   return (
@@ -36,36 +31,17 @@ const App = () => {
           <input
             type="text"
             className="form-control"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
+            onChange={(e) => setName(e.target.value)}
             value={name}
           />
         </div>
         <div className="col-2">
-          <button
-            className="btn btn-primary"
-            onClick={addTask}
-          >
+          <button className="btn btn-primary" onClick={handleAddTask}>
             +
           </button>
         </div>
       </div>
-      <TaskList
-        tasksList={list}
-        deleteTask={(id) => {
-          const newList = list.filter((el, i) => i !== id);
-          setList(newList);
-          localStorage.setItem("list", JSON.stringify(newList));
-        }}
-        editTask={(id, updatedTask) => {
-          const newList = list.map((el, i) =>
-            i === id ? { ...el, ...updatedTask } : el
-          );
-          setList(newList);
-          localStorage.setItem("list", JSON.stringify(newList));
-        }}
-      />
+      <TaskList tasksList={list} deleteTask={deleteTask} editTask={editTask} />
     </>
   );
 };

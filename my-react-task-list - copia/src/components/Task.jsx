@@ -1,11 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import classNames from "classnames";
 
-const Task = (props) => {
+const Task = ({ id, name, isChecked, isDeleted, isUpdated }) => {
   const [checked, setChecked] = useState(false);
   const [isEditing, setEditing] = useState(false);
-  const [editedName, setEditedName] = useState(props.name);
+  const [editedName, setEditedName] = useState(name);
 
   const handleEdit = () => {
     setEditing(true);
@@ -13,22 +13,19 @@ const Task = (props) => {
 
   const handleSave = () => {
     setEditing(false);
-    props.isUpdated(editedName);
+    isUpdated(id, editedName);
   };
 
   return (
     <>
-      <div
-        className="row row-cols-auto align-items-center justify-content-between border rounded mb-3 p-2"
-        style={{ backgroundColor: "#EDF2EF" }}
-      >
+      <div className="row row-cols-auto align-items-center justify-content-between border rounded mb-3 p-2" style={{ backgroundColor: "#EDF2EF" }}>
         <div className="row row-cols-auto">
           <input
-            type="radio"
+            type="checkbox"
             checked={checked}
             onChange={() => {
               setChecked(!checked);
-              props.isChecked(!checked);
+              isChecked(!checked);
             }}
           />
           {isEditing ? (
@@ -39,10 +36,10 @@ const Task = (props) => {
             />
           ) : (
             <label
-              htmlFor={props.name}
+              htmlFor={name}
               className={classNames({ "text-decoration-line-through": checked })}
             >
-              {props.name}
+              {name}
             </label>
           )}
         </div>
@@ -50,10 +47,7 @@ const Task = (props) => {
           <button className="btn" onClick={isEditing ? handleSave : handleEdit}>
             {isEditing ? "Save" : <FaEdit color="blue" />}
           </button>
-          <button
-            className="btn"
-            onClick={() => props.isDeleted(props.id)}
-          >
+          <button className="btn" onClick={() => isDeleted(id)}>
             <FaTrash color="red" />
           </button>
         </div>
