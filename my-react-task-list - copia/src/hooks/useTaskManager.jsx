@@ -1,18 +1,23 @@
+// useTaskManager.jsx
 import { useState, useEffect } from "react";
 
 const useTaskManager = (initialList) => {
   const [list, setList] = useState(initialList);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
-    console.log("Updating Local Storage:", list);
     localStorage.setItem("list", JSON.stringify(list));
   }, [list]);
 
-  const addTask = (name) => {
-    if (name.trim() !== "") {
-      const newTask = { name, completed: false };
-      console.log("Adding Task:", newTask);
+  const addTask = () => {
+    if (name.trim().length >= 3) {
+      const newTask = { name, description, completed: false };
       setList((prevList) => [...prevList, newTask]);
+      setName("");
+      setDescription("");
+    } else {
+      alert("El nombre de la tarea debe tener al menos 3 caracteres.");
     }
   };
 
@@ -26,7 +31,7 @@ const useTaskManager = (initialList) => {
     );
   };
 
-  return { list, addTask, deleteTask, editTask };
+  return { list, name, description, setName, setDescription, addTask, deleteTask, editTask };
 };
 
 export default useTaskManager;
