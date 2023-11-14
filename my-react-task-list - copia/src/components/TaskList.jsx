@@ -1,4 +1,4 @@
-// TaskList.jsx
+import { Box } from "@chakra-ui/react";
 import { useState } from "react";
 import Task from "./Task";
 
@@ -6,7 +6,7 @@ const TaskList = (props) => {
   const [completeTask, setCompleteTask] = useState(0);
 
   return (
-    <>
+    <Box textAlign="center" width={"100%"}>
       {props.tasksList.map((task, index) => (
         <Task
           key={index}
@@ -17,15 +17,19 @@ const TaskList = (props) => {
             setCompleteTask(completeTask + (checked ? 1 : -1));
           }}
           isDeleted={(id) => {
-            props.deleteTask(id);
+            if (props.deleteTask) {
+              props.deleteTask(id);
+            }
           }}
           isUpdated={(id, updatedTask) => {
-            props.editTask(id, updatedTask);
+            if (props.editTask) {
+              props.editTask(id, updatedTask);
+            }
           }}
         />
       ))}
       <p>Tareas pendientes: {props.tasksList.length - completeTask}</p>
-    </>
+    </Box>
   );
 };
 

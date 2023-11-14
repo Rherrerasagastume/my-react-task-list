@@ -1,5 +1,5 @@
 const Header = () => {
-  return <div className="fs-2">My Todo App List</div>;
+  return <div className="fs-2"></div>;
 };
 
 export default Header;

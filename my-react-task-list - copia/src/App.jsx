@@ -1,52 +1,103 @@
-// App.jsx
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import TaskList from "./components/TaskList";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ChakraProvider, Box, Input, Textarea, Button,Text } from "@chakra-ui/react";
 import Header from "./components/header";
+import Home from "./components/Home";
+import SobreNosotros from "./components/SobreNosotros";
+import Tareas from "./components/Tareas";
+import Menu from "./components/Menu";
 import useTaskManager from "./hooks/useTaskManager";
 
+
 const staticList = [
-  { name: "Buy a new gaming laptop", description: "Research the latest models.", completed: false },
-  { name: "Complete a previous task", description: "Finish the report.", completed: false },
-  { name: "Create a video for YouTube", description: "Plan and record a new video.", completed: false },
+  {
+    name: "Buy a new gaming laptop",
+    description: "Research the latest models.",
+    completed: false,
+  },
+  {
+    name: "Complete a previous task",
+    description: "Finish the report.",
+    completed: false,
+  },
+  {
+    name: "Create a video for YouTube",
+    description: "Plan and record a new video.",
+    completed: false,
+  },
 ];
 
 const App = () => {
-  const { list, name, description, setName, setDescription, addTask, deleteTask, editTask } = useTaskManager(
-    JSON.parse(localStorage.getItem("list")) || staticList
-  );
+  const {
+    list,
+    name,
+    description,
+    setName,
+    setDescription,
+    addTask,
+    deleteTask,
+    editTask,
+  } = useTaskManager(staticList.map((task) => ({ ...task })));
 
   const handleAddTask = () => {
     addTask();
   };
 
   return (
-    <>
-      <Header />
-      <div className="row">
-        <div className="col-12">
-          <input
-            type="text"
-            className="form-control mb-2"
-            placeholder="Nombre de la tarea"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+    <ChakraProvider>
+      <Router>
+        <Header />
+        <Menu />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Box className="row">
+                <Box className="col-12">
+                  <Home />
+                </Box>
+              </Box>
+            }
           />
-          <textarea
-            className="form-control mb-2"
-            placeholder="Descripción de la tarea"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+          <Route
+            path="/tareas"
+            element={
+              <Box textAlign="center" w="100vw" p={0}>
+                <Box textAlign="center" width="100%">
+                <Text as="h2" fontSize="2xl" fontWeight="bold" mb="4">
+                  Listado de Tareas
+                </Text>
+                  <Input
+                    type="text"
+                    mb="2"
+                    placeholder="Nombre de la tarea"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <Textarea
+                    mb="2"
+                    placeholder="Descripción de la tarea"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                  <Button colorScheme="teal" onClick={handleAddTask} mt="2">
+                    Agregar tarea
+                  </Button>
+                </Box>
+                <Box className="col-12">
+                  <Tareas
+                    tasksList={list}
+                    deleteTask={deleteTask}
+                    editTask={editTask}
+                  />
+                </Box>
+              </Box>
+            }
           />
-          <button className="btn btn-primary" onClick={handleAddTask}>
-            Agregar tarea
-          </button>
-        </div>
-        <div className="col-12">
-          <TaskList tasksList={list} deleteTask={deleteTask} editTask={editTask} />
-        </div>
-      </div>
-    </>
+          <Route path="/sobre-nosotros" element={<SobreNosotros />} />
+        </Routes>
+      </Router>
+    </ChakraProvider>
   );
 };
 

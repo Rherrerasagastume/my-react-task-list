@@ -1,7 +1,6 @@
-// Task.jsx
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
-import classNames from "classnames";
+import { Box, Textarea, Input, Button, Flex,Text } from "@chakra-ui/react";
 
 const Task = (props) => {
   const [checked, setChecked] = useState(false);
@@ -15,62 +14,75 @@ const Task = (props) => {
 
   const handleSave = () => {
     setEditing(false);
-    props.isUpdated(props.id, { name: editedName, description: editedDescription });
+    if (props.isUpdated) {
+      props.isUpdated(props.id, { name: editedName, description: editedDescription });
+    }
+  };
+
+  const handleDelete = () => {
+    console.log("Handle Delete");
+    if (props.isDeleted) {
+      props.isDeleted(props.id);
+    }
   };
 
   return (
-    <>
-      <div
-        className="row row-cols-auto align-items-center justify-content-between border rounded mb-3 p-2"
-        style={{ backgroundColor: "#EDF2EF" }}
-      >
-        <div className="row row-cols-auto">
-          <input
-            type="radio"
-            checked={checked}
-            onChange={() => {
-              setChecked(!checked);
+    <Box
+      p="2"
+      mb="3"
+      border="1px"
+      borderColor="gray.300"
+      rounded="md"
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      textAlign="center"
+    >
+      <Flex alignItems="center">
+        <input
+          type="radio"
+          checked={checked}
+          onChange={() => {
+            setChecked(!checked);
+            if (props.isChecked) {
               props.isChecked(!checked);
-            }}
-          />
-          {isEditing ? (
-            <>
-              <input
-                type="text"
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-                className="mr-2"
-              />
-              <textarea
-                value={editedDescription}
-                onChange={(e) => setEditedDescription(e.target.value)}
-              />
-            </>
-          ) : (
-            <div>
-              <label
-                htmlFor={props.name}
-                className={classNames({ "text-decoration-line-through": checked })}
-              >
-                {props.name}
-              </label>
-              <p>{props.description}</p>
-            </div>
-          )}
-        </div>
-        <div>
-          <button className="btn" onClick={isEditing ? handleSave : handleEdit}>
-            {isEditing ? "Save" : <FaEdit color="blue" />}
-          </button>
-          <button
-            className="btn"
-            onClick={() => props.isDeleted(props.id)}
-          >
-            <FaTrash color="red" />
-          </button>
-        </div>
-      </div>
-    </>
+            }
+          }}
+        />
+        {isEditing ? (
+          <>
+            <Input
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              mr="2"
+            />
+            <Textarea
+              value={editedDescription}
+              onChange={(e) => setEditedDescription(e.target.value)}
+            />
+          </>
+        ) : (
+          <Box>
+            <Text
+              htmlFor={props.name}
+              as={checked ? 's':''}
+            >
+              {props.name}
+            </Text>
+            <p>{props.description}</p>
+          </Box>
+        )}
+      </Flex>
+      <Box>
+        <Button mr="2" onClick={isEditing ? handleSave : handleEdit}>
+          {isEditing ? "Save" : <FaEdit color="blue" />}
+        </Button>
+        <Button onClick={handleDelete}>
+          <FaTrash color="red" />
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

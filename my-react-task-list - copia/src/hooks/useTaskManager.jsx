@@ -1,37 +1,60 @@
-// useTaskManager.jsx
 import { useState, useEffect } from "react";
 
-const useTaskManager = (initialList) => {
-  const [list, setList] = useState(initialList);
+const useTaskManager = () => {
+  const staticList = [
+    { name: "Buy a new gaming laptop", description: "Research the latest models.", completed: false },
+    { name: "Complete a previous task", description: "Finish the report.", completed: false },
+    { name: "Create a video for YouTube", description: "Plan and record a new video.", completed: false },
+  ];
+
+  const [list, setList] = useState(() => {
+    const storedList = localStorage.getItem("taskList");
+
+    return storedList ? JSON.parse(storedList) : staticList;
+  });
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    localStorage.setItem("list", JSON.stringify(list));
+    saveListToLocalStorage();
   }, [list]);
 
   const addTask = () => {
-    if (name.trim().length >= 3) {
+    if (name && description) {
       const newTask = { name, description, completed: false };
-      setList((prevList) => [...prevList, newTask]);
+      setList([...list, newTask]);
       setName("");
       setDescription("");
-    } else {
-      alert("El nombre de la tarea debe tener al menos 3 caracteres.");
     }
   };
 
-  const deleteTask = (id) => {
-    setList((prevList) => prevList.filter((_, i) => i !== id));
+  const deleteTask = (taskId) => {
+    setList(list.filter((_, index) => index !== taskId));
   };
 
-  const editTask = (id, updatedTask) => {
-    setList((prevList) =>
-      prevList.map((el, i) => (i === id ? { ...el, ...updatedTask } : el))
-    );
+  const editTask = (taskId, updatedTask) => {
+    setList(list.map((task, index) => (index === taskId ? updatedTask : task)));
   };
 
-  return { list, name, description, setName, setDescription, addTask, deleteTask, editTask };
+  const saveListToLocalStorage = () => {
+    try {
+      localStorage.setItem("taskList", JSON.stringify(list));
+    } catch (error) {
+      console.error("Error saving to localStorage:", error);
+    }
+  };
+
+  return {
+    list,
+    name,
+    description,
+    setName,
+    setDescription,
+    addTask,
+    deleteTask,
+    editTask,
+  };
 };
 
 export default useTaskManager;
