@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
-import { Box, Textarea, Input, Button, Flex,Text } from "@chakra-ui/react";
+import { Box, Textarea, Input, Button, Flex, Text } from "@chakra-ui/react";
 
 const Task = (props) => {
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(props.complete || false);
   const [isEditing, setEditing] = useState(false);
   const [editedName, setEditedName] = useState(props.name);
   const [editedDescription, setEditedDescription] = useState(props.description);
+
+  useEffect(() => {
+    setChecked(props.complete || false);
+  }, [props.complete]);
 
   const handleEdit = () => {
     setEditing(true);
@@ -15,7 +19,7 @@ const Task = (props) => {
   const handleSave = () => {
     setEditing(false);
     if (props.isUpdated) {
-      props.isUpdated(props.id, { name: editedName, description: editedDescription });
+      props.isUpdated(props.id, { name: editedName, description: editedDescription, complete: checked });
     }
   };
 
@@ -27,16 +31,17 @@ const Task = (props) => {
   };
 
   return (
-    <Box
+    <Flex
       p="2"
       mb="3"
       border="1px"
       borderColor="gray.300"
       rounded="md"
-      display="flex"
       alignItems="center"
       justifyContent="space-between"
       textAlign="center"
+      width="70%"
+      mx="auto"
     >
       <Flex alignItems="center">
         <input
@@ -55,7 +60,7 @@ const Task = (props) => {
               type="text"
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
-              mr="2"
+              mx="2"
             />
             <Textarea
               value={editedDescription}
@@ -63,14 +68,13 @@ const Task = (props) => {
             />
           </>
         ) : (
-          <Box>
-            <Text
-              htmlFor={props.name}
-              as={checked ? 's':''}
-            >
+          <Box textAlign="left">
+            <Text htmlFor={props.name} as={checked ? "s" : ""} fontSize="lg" mb="2">
               {props.name}
             </Text>
-            <p>{props.description}</p>
+            <Text>
+              {props.description}
+            </Text>
           </Box>
         )}
       </Flex>
@@ -82,7 +86,7 @@ const Task = (props) => {
           <FaTrash color="red" />
         </Button>
       </Box>
-    </Box>
+    </Flex>
   );
 };
 

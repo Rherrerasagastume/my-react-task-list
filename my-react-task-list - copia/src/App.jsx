@@ -13,17 +13,17 @@ const staticList = [
   {
     name: "Buy a new gaming laptop",
     description: "Research the latest models.",
-    completed: false,
+    complete: false,
   },
   {
     name: "Complete a previous task",
     description: "Finish the report.",
-    completed: false,
+    complete: false,
   },
   {
     name: "Create a video for YouTube",
     description: "Plan and record a new video.",
-    completed: false,
+    complete: false,
   },
 ];
 
@@ -72,15 +72,17 @@ const App = () => {
                     mb="2"
                     placeholder="Nombre de la tarea"
                     value={name}
+                    width="70%"
                     onChange={(e) => setName(e.target.value)}
                   />
                   <Textarea
                     mb="2"
                     placeholder="Descripción de la tarea"
                     value={description}
+                    width="70%"
                     onChange={(e) => setDescription(e.target.value)}
                   />
-                  <Button colorScheme="teal" onClick={handleAddTask} mt="2">
+                  <Button width="70%" colorScheme="teal" onClick={handleAddTask} mt="2">
                     Agregar tarea
                   </Button>
                 </Box>

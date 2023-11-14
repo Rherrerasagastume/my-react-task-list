@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -8,20 +8,55 @@ import {
   DrawerOverlay,
   useDisclosure,
   Heading,
+  List,
+  ListItem,
+  Text,
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
+import { useColorMode } from "@chakra-ui/react";
 
 const Menu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [title] = useState("Mi Aplicación de Tareas");
+  const { colorMode, toggleColorMode } = useColorMode();
+  const [isDarkMode, setIsDarkMode] = useState(colorMode === "dark");
+
+  useEffect(() => {
+    setIsDarkMode(colorMode === "dark");
+  }, [colorMode]);
 
   const closeMenu = () => {
     onClose();
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode((prevMode) => {
+      const newMode = !prevMode;
+      localStorage.setItem("darkMode", newMode ? "dark" : "light");
+      toggleColorMode();
+      return newMode;
+    });
+  };
+
+  useEffect(() => {
+    const storedMode = localStorage.getItem("darkMode");
+    if (storedMode) {
+      setIsDarkMode(storedMode === "dark");
+    }
+  }, []);
+
   return (
-    <Box bg="teal" color="white" width="100%" p={4} display="flex" justifyContent="space-between" alignItems="center">
+    <Box
+      bg="teal"
+      color="white"
+      width="100%"
+      height="100%"
+      p={4}
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+    >
       <Button variant="ghost" onClick={onOpen}>
         <HamburgerIcon />
       </Button>
@@ -31,23 +66,26 @@ const Menu = () => {
         <DrawerContent>
           <DrawerBody>
             <Box as="nav" textAlign="center">
-              <ul>
-                <li>
+              <List styleType="none" p={0} m={0}>
+                <ListItem mb={2}>
                   <Link to="/" onClick={closeMenu}>
-                    Home
+                    <Text fontSize="lg">Home</Text>
                   </Link>
-                </li>
-                <li>
+                </ListItem>
+                <ListItem mb={2}>
                   <Link to="/tareas" onClick={closeMenu}>
-                    Tareas
+                    <Text fontSize="lg">Tareas</Text>
                   </Link>
-                </li>
-                <li>
+                </ListItem>
+                <ListItem mb={2}>
                   <Link to="/sobre-nosotros" onClick={closeMenu}>
-                    Sobre Nosotros
+                    <Text fontSize="lg">Sobre Nosotros</Text>
                   </Link>
-                </li>
-              </ul>
+                </ListItem>
+              </List>
+              <Button onClick={toggleDarkMode} variant="ghost" mt={4}>
+                {isDarkMode ? <SunIcon color="white" /> : <MoonIcon borderColor="white" />}
+              </Button>
             </Box>
           </DrawerBody>
         </DrawerContent>

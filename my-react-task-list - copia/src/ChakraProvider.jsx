@@ -1,5 +1,5 @@
-// src/ChakraProvider.jsx
-import { ChakraProvider as ChakraUIProvider, CSSReset } from "@chakra-ui/react";
+
+import { ChakraProvider as ChakraUIProvider, CSSReset, useColorMode } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
 import React from "react";
 
@@ -14,11 +14,15 @@ const theme = extendTheme({
   },
 });
 
-const ChakraProvider = ({ children }) => (
-  <ChakraUIProvider theme={theme}>
-    <CSSReset />
-    {children}
-  </ChakraUIProvider>
-);
+const ChakraProvider = ({ children }) => {
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  return (
+    <ChakraUIProvider theme={theme} colorMode={colorMode}>
+      <CSSReset />
+      {children}
+    </ChakraUIProvider>
+  );
+};
 
 export default ChakraProvider;

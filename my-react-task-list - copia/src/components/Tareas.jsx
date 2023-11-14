@@ -4,7 +4,7 @@ import TaskList from "./TaskList";
 
 const Tareas = ({ tasksList, deleteTask, editTask }) => {
   return (
-    <Box p="4" textAlign="center" mx="auto">
+    <Box p="4" height="100vh" textAlign="center" mx="auto">
       
       <TaskList tasksList={tasksList} deleteTask={deleteTask} editTask={editTask} />
     </Box>

@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 
 const useTaskManager = () => {
   const staticList = [
-    { name: "Buy a new gaming laptop", description: "Research the latest models.", completed: false },
-    { name: "Complete a previous task", description: "Finish the report.", completed: false },
-    { name: "Create a video for YouTube", description: "Plan and record a new video.", completed: false },
+    { name: "Buy a new gaming laptop", description: "Research the latest models.", complete: true },
+    { name: "Complete a previous task", description: "Finish the report.", complete: false },
+    { name: "Create a video for YouTube", description: "Plan and record a new video.", complete: false },
   ];
 
   const [list, setList] = useState(() => {
@@ -22,7 +22,7 @@ const useTaskManager = () => {
 
   const addTask = () => {
     if (name && description) {
-      const newTask = { name, description, completed: false };
+      const newTask = { name, description, complete: false };
       setList([...list, newTask]);
       setName("");
       setDescription("");

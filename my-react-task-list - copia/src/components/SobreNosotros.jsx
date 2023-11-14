@@ -3,10 +3,10 @@ import { Box, Heading, Text, UnorderedList, ListItem } from "@chakra-ui/react";
 
 const SobreNosotros = () => {
   return (
-    <Box textAlign="center" p="4">
-      <Heading as="h2" size="2xl" mb="4">
-        Sobre Nosotros
-      </Heading>
+    <Box textAlign="center" height="100vh" p="4">
+      <Text as="h2" fontSize="2xl" fontWeight="bold" mb="4">
+      Sobre Nosotros
+      </Text>
       <Text fontSize="xl" mb="4">
         Bienvenido a nuestra aplicación de tareas, diseñada para hacer la gestión de tareas más fácil y eficiente.
         Nuestra aplicación te ofrece una solución intuitiva y poderosa para organizar tu vida diaria y maximizar tu
